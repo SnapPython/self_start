@@ -11,7 +11,7 @@
 
 sec=2
 cnt=0
-PROC_NAME=component_conta
+PROC_NAME=rm_serial_driver
 
 cd /home/mechax/ylh/sv_with_no_nav
 echo "Starting colcon build"
@@ -20,7 +20,16 @@ echo "Colcon build finished"
 
 allsource="source /opt/ros/humble/setup.bash"
 source="source install/setup.bash"
-cmd="ros2 launch rm_vision_bringup addMVlaunch.py"
+cmd=("ros2 launch rm_vision_bringup addMVlaunch.py"
+	"ros2 launch rm_bringup bringup.launch.py"
+	"ros2 launch livox_ros_driver2 msg_MID360_launch.py"
+	"ros2 launch linefit_ground_segmentation_ros segmentation.launch.py" 
+	"ros2 launch fast_lio mapping.launch.py"
+	"ros2 launch imu_complementary_filter complementary_filter.launch.py"
+	"ros2 launch pointcloud_to_laserscan pointcloud_to_laserscan_launch.py"
+	"ros2 launch icp_localization_ros2 bringup.launch.py"
+	"ros2 launch rm_navigation bringup_launch.py "
+	"ros2 launch rm_serial_driver serial_driver.launch.py")
 echo "Starting launch"
 $allsource
 $source
@@ -36,16 +45,14 @@ while [ 1 ]
 do 
 count=$(ps -ef | grep $PROC_NAME | grep -v grep | wc -l)
 echo "Thread count: $count"
-if [ $count -eq 0 ];then
+if [ $count -ne 2 ];then
 	echo "Starting $PROC_NAME"
-	cd ~
 	echo "mechax2024" | sudo -S sudo chmod +777 /dev/ttyUSB0
-	cd /home/mechax/zyb/mechax_cv_trajectory
 	$allsource
 	$source
 	$cmd
 	echo "$PROC_NAME has started!"
-		sleep $sec
+	sleep $sec
 else
 	echo "The $PROC_NAME is still alive!"
 	sleep $sec
