@@ -39,8 +39,6 @@ echo "Launch finished"
 
 sleep $sec
 
-#Thread='ps -ef | grep $PROC_NAME | grep -v grep' //判断用到，具体用法自行百度
-
 while [ 1 ]
 do 
 count=$(ps -ef | grep $PROC_NAME | grep -v grep | wc -l)
