@@ -1,0 +1,14 @@
+[Unit]
+Description=mechax_cv_trajectory
+
+[Service]
+User=mechax
+ExecStart=/home/mechax/zyb/mechax_cv_trajectory.sh
+# 服务停止时执行的脚本
+
+# Restart=always 表示程序退出就会重启,未进行测试
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
