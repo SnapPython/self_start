@@ -20,7 +20,7 @@ echo "Colcon build finished"
 
 allsource="source /opt/ros/humble/setup.bash"
 source="source install/setup.bash"
-cmd=("ros2 launch rm_vision_bringup addMVlaunch.py"
+cmds=("ros2 launch rm_vision_bringup addMVlaunch.py"
 	"ros2 launch rm_bringup bringup.launch.py"
 	"ros2 launch livox_ros_driver2 msg_MID360_launch.py"
 	"ros2 launch linefit_ground_segmentation_ros segmentation.launch.py" 
@@ -33,7 +33,13 @@ cmd=("ros2 launch rm_vision_bringup addMVlaunch.py"
 echo "Starting launch"
 $allsource
 $source
-$cmd
+
+for cmd in "${cmds[@]}";
+do
+	echo Current CMD : "$cmd"
+	gnome-terminal -- bash -ic "source ~/.bashrc;cd $(pwd);source install/setup.bash;export ROS_DOMAIN_ID=1;$cmd;"
+	sleep 0.2
+done
 echo "Launch finished"
 
 
@@ -48,7 +54,13 @@ if [ $count -ne 2 ];then
 	echo "mechax2024" | sudo -S sudo chmod +777 /dev/ttyUSB0
 	$allsource
 	$source
-	$cmd
+	for cmd in "${cmds[@]}";
+	do
+	echo Current CMD : "$cmd"
+	gnome-terminal -- bash -ic "source ~/.bashrc;cd $(pwd);source install/setup.bash;export ROS_DOMAIN_ID=1;$cmd;"
+	sleep 0.2
+	done
+	echo "Launch finished"
 	echo "$PROC_NAME has started!"
 	sleep $sec
 else
