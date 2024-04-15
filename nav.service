@@ -1,0 +1,11 @@
+[Unit]
+Description=nav_bringup
+
+[Service]
+User=mechax
+ExecStart=/home/mechax/ylh/self_start/sentry_bringup.sh
+
+Restart=always
+
+[Install]
+WantedBy=graphical.target

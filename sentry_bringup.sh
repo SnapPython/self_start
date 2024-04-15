@@ -1,4 +1,5 @@
 #!/bin/bash
+export DISPLAY=:0
 ### BEGIN INIT INFO
 # Provides:          watchDog
 # Required-Start:    $remote_fs $syslog
@@ -12,11 +13,9 @@
 sec=2
 cnt=0
 PROC_NAME=rm_serial_driver
+pwd=/home/mechax/ylh/sv_with_no_nav
 
-cd /home/mechax/ylh/sv_with_no_nav
-echo "Starting colcon build"
-colcon build
-echo "Colcon build finished"
+gnome-terminal -- bash -ic "cd /home/mechax/ylh/sv_with_no_nav;colcon build;"
 
 allsource="source /opt/ros/humble/setup.bash"
 source="source install/setup.bash"
@@ -37,7 +36,7 @@ $source
 for cmd in "${cmds[@]}";
 do
 	echo Current CMD : "$cmd"
-	gnome-terminal -- bash -ic "source ~/.bashrc;cd $(pwd);source install/setup.bash;export ROS_DOMAIN_ID=1;$cmd;"
+	gnome-terminal -- bash -ic "source ~/.bashrc;cd /home/mechax/ylh/sv_with_no_nav;source install/setup.bash;export ROS_DOMAIN_ID=1;$cmd;"
 	sleep 0.2
 done
 echo "Launch finished"
@@ -54,12 +53,9 @@ if [ $count -ne 2 ];then
 	echo "mechax2024" | sudo -S sudo chmod +777 /dev/ttyUSB0
 	$allsource
 	$source
-	for cmd in "${cmds[@]}";
-	do
 	echo Current CMD : "$cmd"
-	gnome-terminal -- bash -ic "source ~/.bashrc;cd $(pwd);source install/setup.bash;export ROS_DOMAIN_ID=1;$cmd;"
+	gnome-terminal -- bash -ic "source ~/.bashrc;cd /home/mechax/ylh/sv_with_no_nav;source install/setup.bash;export ROS_DOMAIN_ID=1;ros2 launch rm_serial_driver serial_driver.launch.py)"
 	sleep 0.2
-	done
 	echo "Launch finished"
 	echo "$PROC_NAME has started!"
 	sleep $sec
